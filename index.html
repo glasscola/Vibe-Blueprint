@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="아이디어를 정리하고 프로젝트에 맞는 기능을 골라 AI 코딩 프롬프트를 만들어 보세요.">
+  <title>Vibe Blueprint</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<div id="vibe-planner" lang="ko" aria-label="바이브 코딩 기획 도우미">
+  <header class="vp-top"><span class="vp-logo">Vibe Blueprint</span><span class="vp-muted">기획을 고르고, AI에게 그대로 전달하세요.</span></header>
+  <div class="vp-layout">
+    <nav class="vp-nav" aria-label="기획 단계">
+      <button type="button" class="vp-step cursor-interaction" data-step="0" aria-current="step"><span class="vp-number">01</span>기획 구상</button>
+      <button type="button" class="vp-step cursor-interaction" data-step="1"><span class="vp-number">02</span>사용자·기기</button>
+      <button type="button" class="vp-step cursor-interaction" data-step="2"><span class="vp-number">03</span>추가할 기능</button>
+      <button type="button" class="vp-step cursor-interaction" data-step="3"><span class="vp-number">04</span>화면·디자인</button>
+      <button type="button" class="vp-step cursor-interaction" data-step="4"><span class="vp-number">05</span>명령 프롬프트</button>
+    </nav>
+    <main class="vp-main">
+      <p class="vp-kicker" id="vp-position">1 / 5 · 기획 구상</p>
+      <section data-panel="0">
+        <h2>바이브 코딩 시작하기</h2>
+        <p class="vp-intro">만들고 싶은 것, 추가하고 싶은 것을 자유롭게 구상해보세요.</p>
+        <div class="vp-fields">
+          <label class="vp-field">프로젝트 이름<input class="vp-input" data-key="name" type="text" maxlength="80" value="바이브 코딩 준비 도우미"></label>
+          <label class="vp-field">기획 구상하기<textarea class="vp-textarea" data-key="idea" maxlength="1200" rows="5" placeholder="어떤 사이트나 앱을 만들고 싶은지, 어떤 기능을 더하고 싶은지 적어주세요.">원하는 프로젝트를 구상하고 필요한 기능과 디자인을 선택하면, AI에게 전달할 명령 프롬프트로 정리해주는 사이트를 만들고 싶어요.</textarea></label>
+          <label class="vp-field">어떤 작업을 할까요?<select class="vp-select" data-key="mode"><option>새 프로젝트 만들기</option><option>기존 프로젝트에 기능 추가하기</option><option>기존 프로젝트의 화면·디자인 수정하기</option><option>AI와 상의해서 정하기</option></select></label>
+          <label class="vp-field">AI에게 추가로 전할 내용 · 선택<textarea class="vp-textarea" data-key="notes" maxlength="600" rows="3" placeholder="예: GitHub에 코드를 저장하고 싶어요. 기존 로그인 화면은 유지해주세요."></textarea></label>
+        </div>
+      </section>
+      <section data-panel="1" hidden>
+        <h2>사용자와 기기 선택하기</h2>
+        <p class="vp-intro">누가 사용할지, 어떤 화면에 맞출지 정해주세요.</p>
+        <div class="vp-fields">
+          <label class="vp-field">사용할 사람<input class="vp-input" type="text" data-key="audience" maxlength="200" value="웹사이트나 앱을 기획하는 비개발자"></label>
+          <label class="vp-field">사용 기기<select class="vp-select" data-key="device"><option>PC 중심, 모바일도 지원</option><option>모바일 중심, PC도 지원</option><option>PC와 모바일 모두 중요</option><option>태블릿 중심</option><option>아직 정하지 않았어요</option></select></label>
+          <label class="vp-field">만들 형태<select class="vp-select" data-key="platform"><option>웹사이트</option><option>모바일 앱</option><option>PC 프로그램</option><option>AI와 상의해서 정하기</option></select></label>
+          <label class="vp-field">기기·환경에 대한 추가 요청 · 선택<input class="vp-input" data-key="environment" maxlength="150" type="text" placeholder="예: 아이폰 Safari에서도 사용, 터치 조작 지원"></label>
+        </div>
+      </section>
+      <section data-panel="2" hidden>
+        <h2>추가하고 싶은 기능</h2>
+        <p class="vp-intro">유형 버튼을 누르면 추천 기능이 자동으로 체크돼요. 기존 선택은 유지되며, 각 항목은 자유롭게 해제할 수 있어요.</p>
+        <div class="vp-search-block">
+          <label class="vp-field" for="vp-feature-search">무엇을 만들고 싶나요?<input class="vp-input vp-search-input" type="search" id="vp-feature-search" maxlength="120" placeholder="예: 가계부, 예약 앱, 퍼즐 게임, 임시 저장" autocomplete="off" aria-describedby="vp-search-help"></label>
+          <div class="vp-row" aria-label="추천 검색 예시"><button type="button" class="vp-type-chip cursor-interaction" data-quick-query="가계부">가계부</button><button type="button" class="vp-type-chip cursor-interaction" data-quick-query="할 일">할 일</button><button type="button" class="vp-type-chip cursor-interaction" data-quick-query="쇼핑몰">쇼핑몰</button><button type="button" class="vp-type-chip cursor-interaction" data-quick-query="예약 앱">예약 앱</button><button type="button" class="vp-type-chip cursor-interaction" data-quick-query="게임">게임</button><button type="button" class="vp-type-chip cursor-interaction" data-quick-query="모바일 앱">모바일 앱</button></div>
+          <div class="vp-row"><button type="button" id="vp-use-idea" class="vp-button cursor-interaction">내 기획으로 추천 찾기</button><span class="vp-muted" id="vp-search-help">준비된 기능 목록에서 검색해요.</span></div>
+          <details class="vp-type-list"><summary class="cursor-interaction" id="vp-types-label">프로젝트 유형 둘러보기</summary><div id="vp-type-chips" class="vp-row"></div></details>
+        </div>
+        <div class="vp-feature-tabs" role="group" aria-label="기능 목록 보기"><button class="vp-button cursor-interaction" type="button" data-feature-view="recommended" aria-pressed="true">추천 기능</button><button class="vp-button cursor-interaction" type="button" data-feature-view="all" aria-pressed="false">전체 기능</button><button class="vp-button cursor-interaction" type="button" data-feature-view="selected" aria-pressed="false">선택한 기능 0</button></div>
+        <div class="vp-result-heading" aria-live="polite"><h3 id="vp-results-title">먼저 살펴볼 공통 기능</h3><p class="vp-muted" id="vp-results-description"></p></div>
+        <div class="vp-actions"><span class="vp-muted" id="vp-feature-count" aria-live="polite">0개 선택</span><div class="vp-row"><button class="vp-button cursor-interaction" type="button" id="vp-select-visible">현재 목록 모두 선택</button><button class="vp-button cursor-interaction" type="button" id="vp-select-none">선택 전체 해제</button></div></div>
+        <p class="vp-status" id="vp-feature-copy-status" aria-live="polite"></p>
+        <div id="vp-features"></div>
+        <label class="vp-field vp-custom">내가 직접 추가하기<textarea class="vp-textarea" data-key="customFeatures" maxlength="800" rows="3" placeholder="목록에 없는 기능을 적어주세요. 예: 고객 예약 달력, 파일 일괄 다운로드"></textarea></label>
+      </section>
+      <section data-panel="3" hidden>
+        <h2>화면과 디자인 선택하기</h2>
+        <p class="vp-intro">스타일과 색을 고르고, 원하는 화면 요소를 더해보세요.</p>
+        <h3>디자인 스타일</h3>
+        <div class="vp-styles" id="vp-styles" role="group" aria-label="디자인 스타일"></div>
+        <div class="vp-design-block">
+          <h3>베이스 색</h3><p class="vp-muted">화면의 바탕이 되는 색이에요.</p>
+          <div class="vp-swatches" id="vp-base-swatches" role="group" aria-label="베이스 색 선택"></div>
+          <div class="vp-color-row"><label for="vp-base-picker" class="vp-muted">직접 선택</label><input type="color" id="vp-base-picker" value="#f7f8fa" aria-label="베이스 색 직접 선택"><input class="vp-input vp-hex" id="vp-base-hex" type="text" value="#F7F8FA" maxlength="7" aria-label="베이스 색 HEX 코드" spellcheck="false" aria-describedby="vp-base-error"></div>
+          <p id="vp-base-error" class="vp-error" role="alert" hidden>#을 포함한 6자리 색상 코드를 입력해주세요.</p>
+        </div>
+        <div class="vp-design-block">
+          <h3>포인트 색</h3><p class="vp-muted">버튼과 선택한 항목을 강조하는 색이에요.</p>
+          <div class="vp-swatches" id="vp-accent-swatches" role="group" aria-label="포인트 색 선택"></div>
+          <div class="vp-color-row"><label for="vp-accent-picker" class="vp-muted">직접 선택</label><input type="color" id="vp-accent-picker" value="#386af4" aria-label="포인트 색 직접 선택"><input class="vp-input vp-hex" id="vp-accent-hex" type="text" value="#386AF4" maxlength="7" aria-label="포인트 색 HEX 코드" spellcheck="false" aria-describedby="vp-accent-error"></div>
+          <p id="vp-accent-error" class="vp-error" role="alert" hidden>#을 포함한 6자리 색상 코드를 입력해주세요.</p>
+        </div>
+        <div class="vp-design-block"><h3>원하는 화면 요소</h3><div class="vp-design-choices" id="vp-design-choices"></div></div>
+        <label class="vp-field vp-custom">내가 직접 추가하기<textarea class="vp-textarea" data-key="customDesign" maxlength="600" rows="3" placeholder="예: 제목은 크게, 카드 모서리는 각지게. 참고 사이트의 메뉴 배치를 적용해주세요."></textarea></label>
+      </section>
+      <section data-panel="4" hidden>
+        <h2>AI에게 전달하기</h2>
+        <p class="vp-intro">작성한 기획, 선택한 기능과 디자인을 하나로 정리했어요. Codex·Claude 등 AI 도구에 복사해 전달하세요.</p>
+        <div class="vp-row"><button type="button" id="vp-copy" class="vp-button vp-primary cursor-interaction">명령 프롬프트 복사</button><button type="button" id="vp-select-output" class="vp-button cursor-interaction">텍스트 전체 선택</button></div>
+        <p id="vp-copy-status" class="vp-status" aria-live="polite"></p>
+        <label class="vp-field">완성된 명령 프롬프트<textarea id="vp-output" class="vp-textarea vp-output" readonly spellcheck="false" aria-label="완성된 명령 프롬프트"></textarea></label>
+      </section>
+      <div class="vp-footer"><button class="vp-button cursor-interaction" type="button" id="vp-prev" disabled>이전</button><button class="vp-button vp-primary cursor-interaction" type="button" id="vp-next">다음 · 사용자·기기</button></div>
+    </main>
+    <aside class="vp-preview" aria-label="선택한 기획과 디자인 미리보기">
+      <h3>내 프로젝트</h3>
+      <div class="vp-project-sample"><div class="vp-mini" id="vp-sample-layout" aria-hidden="true"><b></b><i></i><i></i><i></i></div><div class="vp-project-title" id="vp-sample-name">바이브 코딩 준비 도우미</div><span class="vp-project-cta">버튼 색 미리보기</span></div>
+      <dl><div><dt>작업</dt><dd id="vp-summary-mode"></dd></div><div><dt>사용자·기기</dt><dd id="vp-summary-audience"></dd></div><div><dt>선택한 기능·작업 방식</dt><dd id="vp-summary-features"></dd></div><div><dt>화면·디자인</dt><dd id="vp-summary-design"></dd></div></dl>
+    </aside>
+  </div>
+</div>
+</body>
+</html>
