@@ -58,7 +58,7 @@ for (const section of ["extensions","profiles"]) { for (const definition of cata
   return String(text || '').normalize('NFKC').toLowerCase().replace(/[\s\p{P}\p{S}]/gu, '');
 }
 function computeFeatureRecommendations(query, view, groups, selectedIds) {
-  const trimmed = String(query || '').trim();
+  const trimmed = view === 'recommended' ? String(query || '').trim() : '';
   const normalized = normalizeFeatureQuery(trimmed);
   const all = groups.flatMap(group => group.items);
   const knownIds = new Set(all.map(item => item[0]));
@@ -75,11 +75,12 @@ function computeFeatureRecommendations(query, view, groups, selectedIds) {
   const relatedIds = new Set(matches.flatMap(group => group.common || []).filter(id => knownIds.has(id)));
   let visibleIds;
   if (view === 'selected') visibleIds = selectedSet;
-  else if (view === 'all' && !normalized) visibleIds = knownIds;
-  else if (view === 'recommended' && !normalized) visibleIds = new Set(groups.filter(group => group.kind !== 'profile').flatMap(group => group.items.map(item => item[0])));
+  else if (view === 'all') visibleIds = knownIds;
+  else if (!normalized) visibleIds = new Set(groups.filter(group => group.kind !== 'profile').flatMap(group => group.items.map(item => item[0])));
   else {
-    visibleIds = new Set([...matches.flatMap(group => group.items.map(item => item[0])), ...(view === 'recommended' && matches.length ? [] : directIds)]);
-    if (view === 'recommended') relatedIds.forEach(id => visibleIds.add(id));
+    visibleIds = matches.length
+      ? new Set([...matches.flatMap(group => group.items.map(item => item[0])), ...relatedIds])
+      : directIds;
   }
   const matchedIds = new Set(matches.map(group => group.id));
   const visibleGroups = groups.filter(group => group.items.some(item => visibleIds.has(item[0])));
@@ -134,7 +135,11 @@ function initFeatureRecommender({ root, groups, getSelected, changeSelected, onU
   input.addEventListener('compositionend', () => { composing = false; search(input.value); });
   input.addEventListener('input', event => { if (!composing && !event.isComposing) search(input.value); });
   root.querySelectorAll('[data-feature-view]').forEach(button => {
-    button.addEventListener('click', () => { view = button.dataset.featureView; onUpdate(); onSave(); });
+    button.addEventListener('click', () => {
+      view = button.dataset.featureView;
+      find('#vp-feature-copy-status').textContent = '';
+      onUpdate(); onSave();
+    });
   });
   find('#vp-use-idea').addEventListener('click', () => {
     const idea = root.querySelector('[data-key="idea"]').value.trim();
@@ -167,12 +172,15 @@ function initFeatureRecommender({ root, groups, getSelected, changeSelected, onU
     if (view === 'selected') {
       heading = '선택한 기능 ' + selected.size + '개';
       explanation = '검색어와 관계없이 지금까지 선택한 항목을 모았어요.';
-    } else if (!query.trim()) {
-      heading = view === 'all' ? '전체 기능 ' + current.total + '개' : '먼저 살펴볼 공통 기능';
-      explanation = view === 'all' ? '분류를 펼쳐 원하는 기능을 고르세요.' : '가계부·예약 앱·퍼즐 게임처럼 검색하면 관련 기능을 추천해요.';
+    } else if (view === 'all') {
+      heading = '전체 기능 ' + current.total + '개';
+      explanation = '모든 기능을 분류별로 볼 수 있어요. 분류 제목을 눌러 접거나 펼칠 수 있어요.';
+    } else if (!current.query) {
+      heading = '먼저 살펴볼 공통 기능';
+      explanation = '가계부·예약 앱·퍼즐 게임처럼 검색하면 관련 기능을 추천해요.';
     } else if (names.length) {
-      heading = names.join(' + ') + (view === 'all' ? ' 검색 결과' : ' 추천 기능');
-      explanation = view === 'all' ? '검색에 맞는 기능 ' + current.visibleIds.size + '개를 찾았어요.' : '용도에 맞는 기능과 함께 고려할 공통 기능 ' + current.visibleIds.size + '개예요. 원하는 항목만 체크하세요.';
+      heading = names.join(' + ') + ' 추천 기능';
+      explanation = '용도에 맞는 기능과 함께 고려할 공통 기능 ' + current.visibleIds.size + '개예요. 원하는 항목만 체크하세요.';
     } else if (current.visibleIds.size) {
       heading = '기능 검색 결과 ' + current.visibleIds.size + '개';
       explanation = '기능 이름과 설명에서 검색어에 맞는 항목을 찾았어요.';
@@ -182,15 +190,15 @@ function initFeatureRecommender({ root, groups, getSelected, changeSelected, onU
     }
     find('#vp-results-title').textContent = heading;
     find('#vp-results-description').textContent = explanation;
-    const nextSignature = view + '|' + query + '|' + [...current.visibleIds].join(',');
+    const nextSignature = view + '|' + current.query + '|' + [...current.visibleIds].join(',');
     if (signature !== nextSignature) {
       const focusedId = document.activeElement?.dataset?.feature;
       list.replaceChildren(); inputs.clear(); counts.clear(); signature = nextSignature;
       current.visibleGroups.forEach((group, index) => {
         const items = group.items.filter(item => current.visibleIds.has(item[0]));
         const details = make('details', 'vp-group');
-        const stateKey = view + ':' + query + ':' + group.id;
-        details.open = groupState.has(stateKey) ? groupState.get(stateKey) : index === 0 || view === 'selected';
+        const stateKey = view + ':' + current.query + ':' + group.id;
+        details.open = groupState.has(stateKey) ? groupState.get(stateKey) : index === 0 || view !== 'recommended';
         details.addEventListener('toggle', () => { if (details.isConnected) groupState.set(stateKey, details.open); });
         const summary = make('summary', 'cursor-interaction', group.name);
         const count = make('span', 'vp-group-count'); counts.set(group.id, { count, items }); summary.append(count); details.append(summary);
