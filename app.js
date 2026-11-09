@@ -244,28 +244,155 @@ function initFeatureRecommender({ root, groups, getSelected, changeSelected, onU
   };
 }
 
- const styleDefs=[['document','차분한 문서형','넓은 여백 · 내용에 집중',''],['service','깔끔한 서비스형','분명한 버튼 · 간결한 구성','vp-mini-service'],['cards','생동감 있는 카드형','카드 묶음 · 시각적인 구분','vp-mini-cards'],['dashboard','정보 중심 대시보드','목록·표 · 정보를 한눈에','vp-mini-dashboard']];
- const designDefs=[['sidebar','왼쪽 사이드 메뉴'],['topnav','상단 메뉴'],['cards','카드 형태로 배치'],['whitespace','넓은 여백'],['rounded','둥근 모서리'],['fixedaction','주요 버튼 고정'],['darkmode','다크 모드 전환'],['motion','부드러운 화면 전환'],['bigtext','크고 읽기 쉬운 글자'],['icons','아이콘과 글자 함께'],['table','표·목록 중심'],['bottomnav','모바일 하단 메뉴']];
+ const styleDefs=[
+  ['document','차분한 문서형','글과 입력 내용을 한 열로 정리해요. 기록·블로그·기획 도구에 어울려요.','','본문은 최대 약 720px 폭의 한 열로 배치하고 제목·설명·입력 영역 순서로 묶으세요. 장식보다 문단 구분과 읽기 흐름을 강조하고, 모바일에서는 좌우 여백을 줄이세요.'],
+  ['service','깔끔한 서비스형','중요한 버튼과 작업 영역이 또렷해요. 예약·할 일·일반 앱에 어울려요.','vp-mini-service','상단에 페이지 제목과 핵심 행동을 배치하고 관련 입력과 내용을 구역별로 묶으세요. 구역마다 가장 중요한 버튼 하나를 강조하고 보조 행동은 테두리 또는 텍스트로 구분하세요. 모바일에서는 내용을 한 열로 정리하세요.'],
+  ['cards','시각적인 카드형','사진·제목·설명을 카드로 묶어요. 상품·콘텐츠·게시물 탐색에 어울려요.','vp-mini-cards','항목을 일관된 이미지 비율·제목·요약·행동 영역을 갖춘 카드로 구성하세요. 넓은 화면에서는 2~3열, 좁은 화면에서는 1열을 기본으로 하되 콘텐츠 크기에 맞춰 조정하세요. 카드 사이 간격과 내부 정렬을 통일하세요.'],
+  ['dashboard','정보 중심 대시보드','요약 수치와 상세 내역을 구분해요. 가계부·통계·관리 도구에 어울려요.','vp-mini-dashboard','상단에는 선택한 기능에 해당하는 요약 수치를, 아래에는 상세 목록과 필요한 시각화를 배치하세요. 숫자는 단위와 기간을 함께 표시하고 비교하기 쉽게 정렬하세요. 모바일에서는 요약과 목록을 위아래로 재배치하세요.'],
+  ['gallery','이미지 중심 갤러리','큰 이미지와 짧은 설명을 보여줘요. 포트폴리오·작품 소개에 어울려요.','vp-mini-gallery','대표 이미지와 제목을 크게 배치하고 작품·콘텐츠 사이의 위계를 명확히 하세요. 이미지 비율을 유지하고 필요한 설명과 대체 텍스트를 제공하세요. 모바일에서 중요한 피사체나 작품이 잘리지 않게 조정하세요.'],
+  ['game','몰입형 게임 화면','플레이 영역과 상태 정보를 구분해요. 게임·인터랙티브 콘텐츠에 어울려요.','vp-mini-game','플레이 영역을 화면의 중심에 두고 점수·진행 상황 등 선택한 기능의 상태 정보를 주변에 배치하세요. 시작·일시정지·재시작 버튼은 구분하고 조작 안내가 플레이 영역을 가리지 않게 하세요. 터치와 키보드 환경에 맞춰 조작부를 배치하세요.']
+ ];
+ const designGroups=[
+  {name:'메뉴와 주요 버튼',items:[
+   ['sidebar','왼쪽 사이드 메뉴','PC에서 여러 화면을 빠르게 오갈 수 있어요.','넓은 화면에서는 왼쪽에 메뉴를 두고 현재 위치를 표시하세요. 모바일에서는 접을 수 있는 메뉴로 바꾸세요.'],
+   ['topnav','상단 메뉴','사이트 이름과 주요 메뉴를 화면 위에 모아요.','상단에 사이트 이름·핵심 메뉴를 배치하고 현재 메뉴를 색과 형태로 함께 표시하세요. 좁은 화면에서는 메뉴를 접으세요.'],
+   ['bottomnav','모바일 하단 메뉴','휴대폰에서 자주 쓰는 메뉴를 엄지로 눌러요.','모바일 하단에 자주 쓰는 메뉴 3~5개를 아이콘과 이름으로 표시하세요. 안전 영역을 확보하고 본문과 고정 버튼이 가려지지 않게 하세요.'],
+   ['fixedaction','주요 버튼 고정','스크롤해도 저장·추가 같은 버튼을 찾기 쉬워요.','핵심 행동 버튼을 화면 가장자리의 고정 영역에 두세요. 하단 메뉴·키보드·본문과 겹치지 않게 여백을 확보하고 버튼의 역할을 글자로 표시하세요.'],
+   ['tabs','탭으로 내용 구분','전체·진행 중·완료처럼 관련 내용을 나눠 봐요.','같은 화면의 관련 내용을 탭으로 구분하세요. 현재 탭·키보드 포커스·연결된 내용 영역을 명확하게 표시하세요.'],
+   ['breadcrumbs','현재 위치 표시','여러 단계의 페이지에서 어디에 있는지 알아요.','깊이가 있는 화면 상단에 현재 위치와 상위 페이지로 돌아가는 경로를 표시하세요.']
+  ]},
+  {name:'내용 배치와 정보 표현',items:[
+   ['cards','카드 형태로 배치','같은 종류의 정보를 작은 묶음으로 구분해요.','관련 정보를 카드 단위로 묶고 제목·본문·행동의 위치를 통일하세요. 카드 전체가 클릭되는 경우 내부 버튼과 조작이 충돌하지 않게 하세요.'],
+   ['table','표·목록 중심','여러 항목의 날짜·금액·상태를 비교하기 좋아요.','항목을 표 또는 목록으로 정렬하고 열 제목·단위·행 구분을 표시하세요. 좁은 화면에서는 핵심 정보가 보이는 목록 또는 가로 스크롤 표를 사용하세요.'],
+   ['stats','요약 숫자 카드','합계·개수·진행률 같은 핵심 정보를 먼저 봐요.','선택한 기능에서 계산하는 주요 수치를 상단 카드에 표시하세요. 수치의 이름·단위·집계 기간을 함께 제공하세요.'],
+   ['charts','그래프와 숫자 함께','추세는 그래프로, 정확한 값은 글자로 확인해요.','선택한 기능에 필요한 그래프에 축·범례·단위를 표시하고 같은 내용을 숫자나 표로도 제공하세요. 색만으로 항목을 구분하지 마세요.'],
+   ['hero','큰 소개 영역','화면 상단에서 서비스나 작품의 특징을 보여줘요.','첫 화면에 핵심 제목·짧은 소개·대표 이미지를 배치하세요. 주요 행동이 있다면 한 가지를 강조하고 작은 화면에서도 내용을 읽을 수 있게 하세요.'],
+   ['imagegrid','이미지 격자 배치','여러 상품이나 작품을 일정한 크기로 둘러봐요.','이미지를 일정한 비율과 간격의 격자로 배치하고 제목과 짧은 설명을 함께 제공하세요. 화면 폭에 맞춰 열 수를 줄이세요.'],
+   ['splitview','목록과 상세 나란히','PC에서 항목을 고르며 자세한 내용을 확인해요.','넓은 화면에서는 목록과 선택한 항목의 상세를 나란히 배치하세요. 모바일에서는 목록과 상세를 별도 영역으로 전환하고 돌아가기 버튼을 제공하세요.']
+  ]},
+  {name:'읽기와 분위기',items:[
+   ['whitespace','넓은 여백','내용 사이에 숨 쉴 공간을 충분히 두어요.','문단·카드·구역 사이의 간격을 넉넉하게 두고 관련 항목은 서로 가깝게 묶어 정보의 관계를 표현하세요.'],
+   ['rounded','둥근 모서리','카드와 버튼의 인상을 부드럽게 만들어요.','카드·입력칸·버튼에 선택한 모서리 설정을 일관되게 적용하세요. 클릭 가능한 요소는 모양만으로 구분하지 마세요.'],
+   ['bigtext','크고 읽기 쉬운 글자','본문과 입력칸을 크게 보여 편하게 읽어요.','본문과 입력 글자를 크게 유지하고 긴 문장에는 충분한 줄 간격을 주세요. 화면 확대 시 내용이 잘리지 않게 하세요.'],
+   ['icons','아이콘과 글자 함께','그림만 보고 버튼의 뜻을 추측하지 않아도 돼요.','주요 메뉴와 행동에 의미가 일관된 아이콘과 글자 라벨을 함께 배치하세요. 장식 아이콘은 읽기 보조 도구에서 제외하세요.'],
+   ['darkmode','다크 모드 전환','밝은 화면과 어두운 화면을 선택해요.','밝은 테마와 어두운 테마의 배경·카드·글자·테두리 색을 각각 정하세요. 선택한 베이스 색을 기본 테마에 적용하고 다른 테마에서도 읽기 쉬운 대비를 유지하세요.'],
+   ['motion','부드러운 화면 전환','선택이나 화면 변화가 자연스럽게 이어져요.','상태 변화에는 짧은 전환 효과를 사용하고 작업을 늦추는 장식 애니메이션은 줄이세요. 동작 줄이기 설정에서는 불필요한 움직임을 생략하세요.'],
+   ['borders','얇은 테두리로 구분','진한 그림자 없이 카드와 입력칸을 구분해요.','카드와 입력 영역은 읽기 쉬운 얇은 테두리로 구분하세요. 선택·포커스 상태는 충분히 뚜렷한 윤곽으로 표시하세요.']
+  ]},
+  {name:'상태와 안내 화면',items:[
+   ['empty','빈 화면 안내','내용이 없을 때 무엇을 하면 되는지 알려줘요.','빈 목록에 현재 상태를 설명하고 첫 항목 추가나 다른 조건 확인 등 맥락에 맞는 다음 행동을 보여주세요.'],
+   ['loadingui','로딩 화면','내용을 불러오는 동안 진행 중임을 보여줘요.','예정된 콘텐츠 위치에 로딩 표시나 자리 표시자를 배치해 화면의 갑작스러운 이동을 줄이세요. 상태를 글자로도 안내하세요.'],
+   ['feedback','성공·오류 안내','저장 완료나 입력 오류를 바로 알아볼 수 있어요.','성공·오류·주의 상태를 색과 아이콘·문구로 함께 표시하세요. 입력 오류는 해당 항목 가까이에 원인과 수정 방법을 제공하세요.'],
+   ['badges','상태 배지','진행 중·완료 같은 상태를 짧은 표식으로 봐요.','항목 상태를 짧은 문구가 있는 배지로 표시하고 색만으로 의미를 전달하지 마세요.'],
+   ['progress','단계·진행률 표시','현재 단계와 남은 과정을 알아볼 수 있어요.','여러 단계의 작업이나 진행률이 있는 기능에 현재 위치·전체 단계 또는 백분율을 표시하세요. 선택하지 않은 기능은 새로 추가하지 마세요.']
+  ]}
+ ];
+ const designDefs=designGroups.flatMap(group=>group.items);
+ const detailDefs={
+  density:{label:'정보 간격',options:[
+   ['spacious','넉넉하게','구역 사이를 넓혀 읽고 입력하는 데 집중해요.','PC의 구역 간 간격은 약 32~48px, 카드 안쪽은 24px을 기준으로 넉넉하게 배치하세요. 모바일에서는 좌우 여백 16~20px을 확보하세요.'],
+   ['balanced','균형 있게','한눈에 보는 정보량과 여백을 균형 있게 맞춰요.','구역 간 간격은 약 24~32px, 카드 안쪽은 16~24px, 관련 항목 사이는 12~16px을 기준으로 정리하세요.'],
+   ['compact','촘촘하게','많은 정보를 비교하되 글자와 버튼은 작아지지 않아요.','구역 간 간격은 약 16~24px, 목록 안쪽 여백은 12~16px을 기준으로 구성하세요. 정보 밀도를 높이더라도 글자를 지나치게 줄이거나 터치 영역을 좁히지 마세요.']
+  ]},
+  typography:{label:'글자 표현',options:[
+   ['readable','읽기 편하게 크게','본문 18px 안팎, 여유 있는 줄 간격으로 보여줘요.','본문은 약 18px, 제목은 28~32px, 본문 줄 높이는 1.7을 기준으로 읽기 편하게 구성하세요. 작은 화면에서도 확대와 줄바꿈을 지원하세요.'],
+   ['balanced','단정한 기본 크기','본문 16px 안팎으로 제목과 설명을 구분해요.','본문·입력 글자는 약 16px, 제목은 24~32px, 줄 높이는 1.6을 기준으로 하세요. 제목·본문·보조 설명의 위계를 굵기와 크기로 구분하세요.'],
+   ['expressive','제목을 시원하게 크게','본문은 단정하게, 대표 제목은 크게 강조해요.','대표 제목은 PC에서 약 40~56px, 모바일에서 28~36px로 조정하고 본문은 약 16px, 줄 높이는 1.6을 기준으로 하세요. 긴 제목이 잘리지 않게 줄바꿈하세요.']
+  ]},
+  corners:{label:'모서리 형태',options:[
+   ['soft','부드럽게 둥글게','카드와 입력칸을 12~16px 정도로 둥글게 만들어요.','카드의 모서리는 약 16px, 입력칸·버튼은 12px을 기준으로 통일하세요.'],
+   ['subtle','살짝 둥글게','6~8px 정도의 작은 곡선으로 단정하게 마무리해요.','카드·입력칸·버튼의 모서리를 약 6~8px로 통일해 단정한 형태를 유지하세요.'],
+   ['square','각지게','직선 위주로 또렷하고 절제된 인상을 만들어요.','카드·입력칸·버튼의 모서리를 약 0~4px로 제한해 직선적인 형태를 유지하세요.']
+  ]}
+ };
+ const designPresets=[
+  {id:'calm',name:'편안한 구조',hint:'기록·독서·기획 도구',description:'따뜻한 크림 배경에 큰 글자와 넓은 여백. 글을 읽고 생각을 정리하기 편해요.',style:'document',base:'#FFF5E6',accent:'#23875B',density:'spacious',typography:'readable',corners:'soft',elements:['topnav','whitespace','rounded','bigtext','icons','empty','feedback']},
+  {id:'clean',name:'깔끔한 구조',hint:'예약·할 일·일반 서비스',description:'흰 배경에 파란 주요 버튼. 얇은 테두리와 분명한 상태 안내로 할 일을 찾기 쉬워요.',style:'service',base:'#FFFFFF',accent:'#386AF4',density:'balanced',typography:'balanced',corners:'subtle',elements:['topnav','cards','rounded','icons','borders','empty','loadingui','feedback']},
+  {id:'colorful',name:'생동감 있는 구조',hint:'콘텐츠·커뮤니티·취미',description:'연한 블루 배경에 보라색 강조. 둥근 카드와 상태 배지로 내용을 구분해요.',style:'cards',base:'#EEF3FF',accent:'#8152CC',density:'balanced',typography:'balanced',corners:'soft',elements:['topnav','cards','rounded','icons','motion','badges','empty']},
+  {id:'focused',name:'정보 중심 구조',hint:'가계부·통계·관리 도구',description:'위에는 요약 숫자, 아래에는 상세 내역. 사이드 메뉴와 표로 많은 정보를 비교해요.',style:'dashboard',base:'#F7F8FA',accent:'#386AF4',density:'compact',typography:'balanced',corners:'subtle',elements:['sidebar','cards','rounded','table','stats','charts','icons','borders','badges','empty','loadingui','feedback']},
+  {id:'mobile',name:'손쉬운 모바일 구조',hint:'습관·일정·모바일 앱',description:'민트 배경과 넉넉한 버튼. 하단 메뉴와 고정 행동 버튼을 엄지가 닿는 곳에 둬요.',style:'service',base:'#EEF8F0',accent:'#23875B',density:'spacious',typography:'readable',corners:'soft',elements:['bottomnav','fixedaction','cards','whitespace','rounded','bigtext','icons','empty','feedback']},
+  {id:'shop',name:'상품 탐색 구조',hint:'쇼핑몰·상품 카탈로그',description:'밝은 배경과 코랄 강조색. 상품 사진·이름·가격을 일정한 카드로 둘러보게 해요.',style:'cards',base:'#FFFFFF',accent:'#DD5C45',density:'balanced',typography:'balanced',corners:'subtle',elements:['topnav','tabs','cards','imagegrid','rounded','badges','empty','loadingui','feedback']},
+  {id:'showcase',name:'작품을 보여주는 구조',hint:'포트폴리오·사진·전시',description:'큰 제목과 대표 이미지가 중심. 넓은 여백과 직선적인 카드로 작품을 돋보이게 해요.',style:'gallery',base:'#FFFFFF',accent:'#303844',density:'spacious',typography:'expressive',corners:'square',elements:['topnav','hero','imagegrid','whitespace','borders','motion']},
+  {id:'play',name:'몰입하는 게임 구조',hint:'캐주얼 게임·인터랙티브',description:'차콜 배경에 밝은 보라색 버튼. 플레이 영역을 크게 두고 점수와 진행 상태를 구분해요.',style:'game',base:'#20252C',accent:'#B99AFF',density:'balanced',typography:'expressive',corners:'soft',elements:['cards','rounded','icons','motion','badges','progress','feedback']}
+ ];
  const baseColors=[['화이트','#FFFFFF'],['안개','#F7F8FA'],['크림','#FFF5E6'],['민트','#EEF8F0'],['블루','#EEF3FF'],['차콜','#20252C']];
- const accentColors=[['블루','#386AF4'],['그린','#23875B'],['코랄','#DD5C45'],['퍼플','#8152CC'],['앰버','#A66B08'],['차콜','#303844']];
+ const accentColors=[['블루','#386AF4'],['그린','#23875B'],['코랄','#DD5C45'],['퍼플','#8152CC'],['라벤더','#B99AFF'],['앰버','#A66B08'],['차콜','#303844']];
  const flat=groups.flatMap(g=>g.items);
  const names=['기획 구상','사용자·기기','추가할 기능','화면·디자인','명령 프롬프트'];
  const keys=['name','idea','mode','notes','audience','device','platform','environment','customFeatures','customDesign'];
  const fields=Object.fromEntries(keys.map(k=>[k,$('[data-key="'+k+'"]')]));
  const answers=Object.fromEntries(keys.map(k=>[k,fields[k].value]));
  let step=2,selected=new Set(),designSelected=new Set(),style='document',base='#F7F8FA',accent='#386AF4';
+ let designDetails={density:'balanced',typography:'balanced',corners:'square'},designUndo=null;
  const make=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};
- const designInputs=new Map(),styleButtons=new Map();
+ const designInputs=new Map(),styleButtons=new Map(),presetButtons=new Map(),detailInputs=new Map();
  const recommender=initFeatureRecommender({root,groups,getSelected:()=>selected,changeSelected:value=>{selected=value;},onUpdate:update,onSave:save});
+ designPresets.forEach((preset,index)=>{
+  const button=make('button','vp-design-preset cursor-interaction');button.type='button';button.dataset.designPreset=preset.id;
+  button.setAttribute('aria-label',preset.name+' 추천 조합 적용');button.setAttribute('aria-pressed','false');
+  button.style.setProperty('--sample-base',preset.base);button.style.setProperty('--sample-accent',preset.accent);button.style.setProperty('--sample-ink',ink(preset.base));
+  const mini=make('span','vp-mini '+styleDefs.find(x=>x[0]===preset.style)[3]);mini.setAttribute('aria-hidden','true');mini.append(make('b'),make('i'),make('i'),make('i'));
+  const title=make('span','vp-preset-title',preset.name),badge=make('span','vp-preset-badge','선택됨');badge.hidden=true;title.append(badge);
+  const palette=make('span','vp-preset-palette');
+  for(const [label,color] of [['배경',preset.base],['강조',preset.accent]]){
+   const dot=make('span','vp-dot');dot.style.background=color;dot.setAttribute('aria-hidden','true');palette.append(dot,make('span',null,label+' '+color));
+  }
+  button.append(mini,title,make('small','vp-preset-hint',preset.hint),make('span','vp-preset-description',preset.description),palette,make('span','vp-preset-apply','스타일·색·화면 요소 '+preset.elements.length+'개 적용'));
+  $(index<4?'#vp-design-presets':'#vp-design-presets-more').append(button);presetButtons.set(preset.id,button);
+  button.addEventListener('click',()=>{
+   designUndo={style,base,accent,elements:[...designSelected],details:{...designDetails}};
+   style=preset.style;base=preset.base;accent=preset.accent;designSelected=new Set(preset.elements);
+   designDetails={density:preset.density,typography:preset.typography,corners:preset.corners};
+   clearColorErrors();update();save();$('#vp-design-undo').hidden=false;
+   $('#vp-design-status').textContent=preset.name+' 적용 완료 · 스타일·배경색·포인트 색·세부 설정과 화면 요소 '+preset.elements.length+'개를 선택했어요.';
+  });
+ });
+ $('#vp-design-undo').addEventListener('click',()=>{
+  if(!designUndo)return;
+  ({style,base,accent}=designUndo);designSelected=new Set(designUndo.elements);designDetails={...designUndo.details};designUndo=null;
+  clearColorErrors();update();save();$('#vp-design-undo').hidden=true;$('#vp-design-status').textContent='추천 조합을 적용하기 전 디자인으로 되돌렸어요.';
+ });
+ function clearColorErrors(){
+  for(const kind of ['base','accent']){$('#vp-'+kind+'-error').hidden=true;$('#vp-'+kind+'-hex').setAttribute('aria-invalid','false');}
+ }
+ function editDesign(){
+  designUndo=null;$('#vp-design-undo').hidden=true;update();save();
+  $('#vp-design-status').textContent='디자인을 직접 조정했어요. 현재 선택한 설정이 명령 프롬프트에 반영돼요.';
+ }
+ function matchingPreset(){
+  return designPresets.find(p=>p.style===style&&p.base===base&&p.accent===accent&&Object.keys(detailDefs).every(key=>p[key]===designDetails[key])&&p.elements.length===designSelected.size&&p.elements.every(id=>designSelected.has(id)));
+ }
+ function syncDetailElement(key){
+  const mappings={density:['whitespace',designDetails.density==='spacious'],typography:['bigtext',designDetails.typography==='readable'],corners:['rounded',designDetails.corners!=='square']};
+  const [id,checked]=mappings[key];checked?designSelected.add(id):designSelected.delete(id);
+ }
+ Object.entries(detailDefs).forEach(([key,definition])=>{
+  const wrap=make('label','vp-field'),label=make('span',null,definition.label),select=make('select','vp-select');select.dataset.designDetail=key;
+  const hint=make('span','vp-muted');hint.id='vp-detail-hint-'+key;select.setAttribute('aria-describedby',hint.id);
+  definition.options.forEach(([id,name])=>{const option=make('option',null,name);option.value=id;select.append(option);});
+  wrap.append(label,select,hint);$('#vp-design-details').append(wrap);detailInputs.set(key,{select,hint});
+  select.addEventListener('change',()=>{designDetails[key]=select.value;syncDetailElement(key);editDesign();});
+ });
  styleDefs.forEach(([id,label,hint,cls])=>{
   const button=make('button','vp-style cursor-interaction');button.type='button';button.dataset.style=id;button.setAttribute('aria-pressed','false');
   const mini=make('div','vp-mini '+cls);mini.setAttribute('aria-hidden','true');mini.append(make('b'),make('i'),make('i'),make('i'));
   button.append(mini,make('span',null,label),make('small',null,hint));$('#vp-styles').append(button);styleButtons.set(id,button);
-  button.addEventListener('click',()=>{style=id;update();save();});
+  button.addEventListener('click',()=>{style=id;editDesign();});
  });
- designDefs.forEach(([id,label])=>{
-  const wrap=make('label','vp-check');const check=make('input');check.type='checkbox';check.dataset.design=id;wrap.append(check,make('span',null,label));$('#vp-design-choices').append(wrap);designInputs.set(id,check);
-  check.addEventListener('change',()=>{check.checked?designSelected.add(id):designSelected.delete(id);update();save();});
+ designGroups.forEach((group,index)=>{
+  const section=make('section','vp-design-group'),heading=make('h4',null,group.name);heading.id='vp-design-group-'+index;section.setAttribute('aria-labelledby',heading.id);
+  const choices=make('div','vp-design-choices');section.append(heading,choices);$('#vp-design-choices').append(section);
+  group.items.forEach(([id,label,hint])=>{
+   const wrap=make('label','vp-check'),check=make('input'),body=make('span');check.type='checkbox';check.dataset.design=id;
+   body.append(make('span',null,label),make('small',null,hint));wrap.append(check,body);choices.append(wrap);designInputs.set(id,check);
+   check.addEventListener('change',()=>{
+    check.checked?designSelected.add(id):designSelected.delete(id);
+    if(id==='whitespace')designDetails.density=check.checked?'spacious':designDetails.density==='spacious'?'balanced':designDetails.density;
+    if(id==='bigtext')designDetails.typography=check.checked?'readable':designDetails.typography==='readable'?'balanced':designDetails.typography;
+    if(id==='rounded')designDetails.corners=check.checked?(designDetails.corners==='square'?'soft':designDetails.corners):'square';
+    editDesign();
+   });
+  });
  });
  const swatchButtons={base:[],accent:[]};
  for(const [kind,palette] of [['base',baseColors],['accent',accentColors]]){
@@ -283,7 +410,7 @@ function initFeatureRecommender({ root, groups, getSelected, changeSelected, onU
  }
  function setColor(kind,value){
   if(kind==='base')base=value.toUpperCase();else accent=value.toUpperCase();
-  $('#vp-'+kind+'-error').hidden=true;$('#vp-'+kind+'-hex').setAttribute('aria-invalid','false');update();save();
+  $('#vp-'+kind+'-error').hidden=true;$('#vp-'+kind+'-hex').setAttribute('aria-invalid','false');editDesign();
  }
  function ink(hex){
   const c=hex.slice(1).match(/../g).map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
@@ -295,14 +422,20 @@ function initFeatureRecommender({ root, groups, getSelected, changeSelected, onU
   keys.forEach(k=>{const v=content.answers?.[k];if(typeof v==='string'){fields[k].value=v.slice(0,fields[k].maxLength>0?fields[k].maxLength:500);answers[k]=fields[k].value;}});
   selected=new Set((Array.isArray(content.features)?content.features:[]).filter(id=>flat.some(item=>item[0]===id)));
   designSelected=new Set((Array.isArray(content.designElements)?content.designElements:[]).filter(id=>designInputs.has(id)));
+  designDetails={density:designSelected.has('whitespace')?'spacious':'balanced',typography:designSelected.has('bigtext')?'readable':'balanced',corners:designSelected.has('rounded')?'soft':'square'};
+  Object.entries(detailDefs).forEach(([key,definition])=>{
+   if(definition.options.some(option=>option[0]===content.designDetails?.[key]))designDetails[key]=content.designDetails[key];
+   syncDetailElement(key);
+  });
   if(styleButtons.has(content.style))style=content.style;
   if(/^#[0-9a-f]{6}$/i.test(content.base||''))base=content.base.toUpperCase();
   if(/^#[0-9a-f]{6}$/i.test(content.accent||''))accent=content.accent.toUpperCase();
   const nextStep=saved.privateContent?.step;if(content.kind==='vibe-planner-v3'&&Number.isInteger(nextStep)&&nextStep>=0&&nextStep<5)step=nextStep;
   recommender.restore(saved.privateContent?.recommendation);
+  $('#vp-design-status').textContent='저장한 디자인을 불러왔어요. 추천 조합을 적용하거나 아래에서 이어서 수정하세요.';
  }
  function save(){
-  try { localStorage.setItem('vibe-blueprint-draft', JSON.stringify({modelContent:{kind:'vibe-planner-v3',answers:{...answers},features:[...selected],designElements:[...designSelected],style,base,accent},privateContent:{step,recommendation:recommender.snapshot()}})); } catch {}
+  try { localStorage.setItem('vibe-blueprint-draft', JSON.stringify({modelContent:{kind:'vibe-planner-v3',answers:{...answers},features:[...selected],designElements:[...designSelected],style,base,accent,designDetails:{...designDetails}},privateContent:{step,recommendation:recommender.snapshot()}})); } catch {}
  }
  const value=k=>answers[k].trim()||'미정';
  function buildPrompt(){
@@ -318,9 +451,21 @@ function initFeatureRecommender({ root, groups, getSelected, changeSelected, onU
   });
   if(answers.customFeatures.trim())lines.push('','직접 추가한 기능:',''+answers.customFeatures.trim());
   const currentStyle=styleDefs.find(x=>x[0]===style);
-  lines.push('','## 화면과 디자인','디자인 스타일: '+currentStyle[1]+' — '+currentStyle[2],'베이스 색(배경): '+base,'포인트 색(버튼·강조): '+accent,'텍스트와 상호작용 요소의 대비를 확보하고 선택한 기기에 맞춰 배치해주세요.');
+  const preset=matchingPreset();
+  lines.push('','## 화면과 디자인');
+  if(preset)lines.push('선택한 추천 조합: '+preset.name);
+  lines.push('디자인 스타일: '+currentStyle[1],'화면 구성: '+currentStyle[4],
+   '베이스 색(전체 배경): '+base+' — 카드·입력칸은 배경과 구분되는 밝기와 테두리로 표현하세요.',
+   '포인트 색(버튼·강조): '+accent+' — 주요 행동 버튼·선택 상태에 집중해서 사용하고 본문 전체를 강조색으로 채우지 마세요.',
+   '글자와 버튼 라벨은 각 배경에서 읽기 쉬운 대비를 확보하세요. 상태는 색뿐 아니라 문구·아이콘으로도 구분하세요.',
+   '메뉴·버튼에는 마우스 올림·선택·키보드 포커스·비활성 상태를 구분하세요. 선택한 기기에 맞춰 배치하고 터치 환경에서는 누르기 충분한 영역과 간격을 확보하세요.',
+   '아래 크기는 디자인 기준값입니다. 실제 콘텐츠·사용 기기·화면 확대에 맞춰 유연하게 조정하고 가로 넘침이나 글자 잘림이 없게 하세요.','', '세부 디자인 설정:');
+  Object.entries(detailDefs).forEach(([key,definition])=>{
+   const choice=definition.options.find(option=>option[0]===designDetails[key]);lines.push('- '+definition.label+' — '+choice[1]+': '+choice[3]);
+  });
   const elements=designDefs.filter(x=>designSelected.has(x[0]));
-  if(elements.length){lines.push('원하는 화면 요소:');elements.forEach(x=>lines.push('- '+x[1]));}else lines.push('추가 화면 요소: 별도 선택 없음');
+  if(elements.length){lines.push('','원하는 화면 요소:');elements.forEach(x=>lines.push('- '+x[1]+': '+x[3]));}else lines.push('추가 화면 요소: 별도 선택 없음');
+  lines.push('화면 요소는 선택한 기능을 표현하는 범위에서 적용하세요. 예시로 언급된 기능을 임의로 추가하지 말고, 메뉴나 고정 영역이 여러 개라면 기기별 위치를 조정해 겹치지 않게 하세요.');
   if(answers.customDesign.trim())lines.push('직접 추가한 디자인 요청:',answers.customDesign.trim());
   lines.push('','## 작업 요청','1. 기존 프로젝트가 있다면 관련 구조와 코드를 먼저 확인하고, 요청한 변경에 맞게 작업해주세요.','2. 선택한 요구사항과 직접 작성한 내용을 빠뜨리지 말고 반영해주세요. 체크하지 않은 부가 기능을 임의로 늘리지 마세요.','3. 필요한 기반 기능이나 서로 충돌하는 조건이 있다면 이유와 해결 방법을 설명해주세요. 미정 내용을 확정 사실처럼 다루지 마세요.','4. 선택 여부와 관계없이 구현에 필요한 기본 보안과 데이터 보호 원칙은 지켜주세요.','5. 작업 결과와 사용 방법을 알려주고, 실제로 확인한 내용과 아직 확인하지 못한 내용을 구분해주세요.');
   return lines.join('\n');
@@ -333,20 +478,25 @@ function initFeatureRecommender({ root, groups, getSelected, changeSelected, onU
   $('#vp-next').textContent=step===3?'명령 프롬프트 보기':'다음 · '+(names[step+1]||'');
   recommender.render();designInputs.forEach((n,id)=>n.checked=designSelected.has(id));
   styleButtons.forEach((n,id)=>n.setAttribute('aria-pressed',String(id===style)));
+  const currentPreset=matchingPreset();
+  presetButtons.forEach((n,id)=>{const active=currentPreset?.id===id;n.setAttribute('aria-pressed',String(active));n.querySelector('.vp-preset-badge').hidden=!active;});
+  detailInputs.forEach(({select,hint},key)=>{select.value=designDetails[key];hint.textContent=detailDefs[key].options.find(option=>option[0]===designDetails[key])[2];});
+  $('#vp-design-count').textContent=designSelected.size+' / '+designDefs.length+'개 선택';
   for(const kind of ['base','accent']){
    const color=kind==='base'?base:accent;swatchButtons[kind].forEach(n=>n.setAttribute('aria-pressed',String(n.dataset.color===color)));
    $('#vp-'+kind+'-picker').value=color;
    if($('#vp-'+kind+'-hex').getAttribute('aria-invalid')!=='true')$('#vp-'+kind+'-hex').value=color;
   }
   root.style.setProperty('--sample-base',base);root.style.setProperty('--sample-ink',ink(base));root.style.setProperty('--sample-accent',accent);root.style.setProperty('--sample-on',ink(accent));
-  const currentStyle=styleDefs.find(x=>x[0]===style);$('#vp-sample-layout').className='vp-mini '+currentStyle[3];
+  root.style.setProperty('--sample-radius',designDetails.corners==='soft'?'16px':designDetails.corners==='subtle'?'8px':'2px');
+  const currentStyle=styleDefs.find(x=>x[0]===style);$('#vp-sample-layout').className='vp-mini '+currentStyle[3];$('#vp-style-detail').textContent=currentStyle[4];
   $('#vp-sample-name').textContent=answers.name.trim()||'내 프로젝트';$('#vp-summary-mode').textContent=value('mode');
   $('#vp-summary-audience').textContent=value('audience')+'\n'+value('device');
   const chosenNames=flat.filter(x=>selected.has(x[0])).map(x=>x[1]);
   const selectedGroups=groups.map(g=>[g.name,g.items.filter(x=>selected.has(x[0])).length]).filter(x=>x[1]);
   $('#vp-summary-features').textContent=chosenNames.length<=6?(chosenNames.join('\n')||'선택한 추가 항목 없음'):selectedGroups.map(([name,count])=>name+' '+count+'개').join('\n');
   if(answers.customFeatures.trim())$('#vp-summary-features').textContent+='\n직접 작성한 기능 포함';
-  $('#vp-summary-design').textContent=currentStyle[1]+'\n베이스 '+base+'\n포인트 '+accent+'\n화면 요소 '+designSelected.size+'개'+(answers.customDesign.trim()?' · 직접 요청 포함':'');
+  $('#vp-summary-design').textContent=(currentPreset?currentPreset.name+'\n':'')+currentStyle[1]+'\n베이스 '+base+'\n포인트 '+accent+'\n'+Object.entries(detailDefs).map(([key,definition])=>definition.options.find(option=>option[0]===designDetails[key])[1]).join(' · ')+'\n화면 요소 '+designSelected.size+'개'+(answers.customDesign.trim()?' · 직접 요청 포함':'')+(designSelected.size?'\n'+designDefs.filter(x=>designSelected.has(x[0])).map(x=>x[1]).join(', '):'');
   const prompt=buildPrompt();if($('#vp-output').value!==prompt){$('#vp-output').value=prompt;$('#vp-copy-status').textContent='';}
   requestAnimationFrame(fitOutput);
  }

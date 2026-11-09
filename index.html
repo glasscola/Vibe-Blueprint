@@ -59,23 +59,32 @@
       </section>
       <section data-panel="3" hidden>
         <h2>화면과 디자인 선택하기</h2>
-        <p class="vp-intro">스타일과 색을 고르고, 원하는 화면 요소를 더해보세요.</p>
-        <h3>디자인 스타일</h3>
+        <p class="vp-intro">원하는 분위기의 추천 조합을 누르면 스타일·색·화면 요소가 함께 선택돼요. 아래에서 하나씩 바꿔도 좋아요.</p>
+        <div class="vp-design-recommendations" aria-labelledby="vp-design-recommendations-title">
+          <h3 id="vp-design-recommendations-title">어떤 화면을 만들고 싶나요?</h3>
+          <p class="vp-muted">카드에 보이는 색과 구성을 한 번에 적용해요. 다른 조합을 누르면 디자인 선택이 해당 조합으로 바뀌며, 직접 작성한 요청과 기능 선택은 유지돼요.</p>
+          <div id="vp-design-presets" class="vp-preset-grid" role="group" aria-label="추천 디자인 조합"></div>
+          <details class="vp-more-presets"><summary class="cursor-interaction">모바일·쇼핑몰·포트폴리오·게임 조합 더 보기</summary><div id="vp-design-presets-more" class="vp-preset-grid" role="group" aria-label="추가 추천 디자인 조합"></div></details>
+          <div class="vp-design-feedback"><p id="vp-design-status" class="vp-status" aria-live="polite">추천 조합을 고르거나, 아래에서 직접 설정해보세요.</p><button id="vp-design-undo" type="button" class="vp-button cursor-interaction" hidden>조합 적용 되돌리기</button></div>
+        </div>
+        <div class="vp-design-heading"><h3>디자인 스타일</h3><p class="vp-muted">정보를 배치하는 기본 형태예요. 스타일을 바꿔도 선택한 색과 화면 요소는 유지돼요.</p></div>
         <div class="vp-styles" id="vp-styles" role="group" aria-label="디자인 스타일"></div>
+        <p id="vp-style-detail" class="vp-design-explanation"></p>
         <div class="vp-design-block">
-          <h3>베이스 색</h3><p class="vp-muted">화면의 바탕이 되는 색이에요.</p>
+          <h3>베이스 색</h3><p class="vp-muted">화면 전체를 채우는 배경색이에요. 카드·입력칸은 배경과 구분되게 하고, 글자는 밝기에 맞춰 읽기 쉽게 표시해요.</p>
           <div class="vp-swatches" id="vp-base-swatches" role="group" aria-label="베이스 색 선택"></div>
           <div class="vp-color-row"><label for="vp-base-picker" class="vp-muted">직접 선택</label><input type="color" id="vp-base-picker" value="#f7f8fa" aria-label="베이스 색 직접 선택"><input class="vp-input vp-hex" id="vp-base-hex" type="text" value="#F7F8FA" maxlength="7" aria-label="베이스 색 HEX 코드" spellcheck="false" aria-describedby="vp-base-error"></div>
           <p id="vp-base-error" class="vp-error" role="alert" hidden>#을 포함한 6자리 색상 코드를 입력해주세요.</p>
         </div>
         <div class="vp-design-block">
-          <h3>포인트 색</h3><p class="vp-muted">버튼과 선택한 항목을 강조하는 색이에요.</p>
+          <h3>포인트 색</h3><p class="vp-muted">저장·시작 같은 주요 버튼, 선택한 메뉴와 체크 표시를 강조해요. 모든 글자에 쓰기보다 중요한 행동에 집중해서 사용해요.</p>
           <div class="vp-swatches" id="vp-accent-swatches" role="group" aria-label="포인트 색 선택"></div>
           <div class="vp-color-row"><label for="vp-accent-picker" class="vp-muted">직접 선택</label><input type="color" id="vp-accent-picker" value="#386af4" aria-label="포인트 색 직접 선택"><input class="vp-input vp-hex" id="vp-accent-hex" type="text" value="#386AF4" maxlength="7" aria-label="포인트 색 HEX 코드" spellcheck="false" aria-describedby="vp-accent-error"></div>
           <p id="vp-accent-error" class="vp-error" role="alert" hidden>#을 포함한 6자리 색상 코드를 입력해주세요.</p>
         </div>
-        <div class="vp-design-block"><h3>원하는 화면 요소</h3><div class="vp-design-choices" id="vp-design-choices"></div></div>
-        <label class="vp-field vp-custom">내가 직접 추가하기<textarea class="vp-textarea" data-key="customDesign" maxlength="600" rows="3" placeholder="예: 제목은 크게, 카드 모서리는 각지게. 참고 사이트의 메뉴 배치를 적용해주세요."></textarea></label>
+        <div class="vp-design-block"><h3>여백·글자·모서리 구체화하기</h3><p class="vp-muted">추천 조합의 세부 설정이에요. 각 선택은 AI에게 전달할 크기와 배치 지침으로 정리돼요.</p><div id="vp-design-details" class="vp-design-details"></div></div>
+        <div class="vp-design-block"><div class="vp-actions"><h3>원하는 화면 요소</h3><span id="vp-design-count" class="vp-muted" aria-live="polite"></span></div><p class="vp-muted">필요한 요소를 개수 제한 없이 선택하세요. 설명을 보고 직접 추가하거나 해제할 수 있어요.</p><div id="vp-design-choices"></div></div>
+        <label class="vp-field vp-custom">내가 직접 추가하기<textarea class="vp-textarea" data-key="customDesign" maxlength="1200" rows="4" placeholder="예: 첫 화면 상단에는 이번 달 합계를 크게, 아래에는 날짜별 내역을 배치해주세요. 모바일에서는 한 열로 보여주세요. 참고 사이트의 주소와 마음에 드는 요소도 적어주세요."></textarea></label>
       </section>
       <section data-panel="4" hidden>
         <h2>AI에게 전달하기</h2>
